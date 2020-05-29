@@ -3,6 +3,7 @@ import Player from "./player";
 
 class Board extends Component {
   state = {
+    tableBet: 0,
     pot: 0,
     handStarted: 0,
     curBet: 0,
@@ -64,11 +65,13 @@ class Board extends Component {
                       id={player.id}
                       player={player}
                       curPlayer={this.state.curPlayer}
+                      tableBet={this.state.tableBet}
                       onFold={this.handleFold}
                       onCheck={this.handleCheck}
                       onBet={this.handleBet}
                       onBetChange={this.handleBetChange}
                       onBetSubmit={this.handleBetSubmit}
+                      onCall={this.handleCall}
                     />
                   </div>
                 ))}
@@ -93,11 +96,13 @@ class Board extends Component {
     let pot = this.state.pot;
     let curPlayer = this.state.curPlayer;
     let curBet = this.state.curBet;
+    let tableBet = this.state.tableBet;
     curBet = parseInt(curBet);
     if (curBet <= players[curPlayer - 1].cash) {
       players[curPlayer - 1].cash -= curBet;
-      players[curPlayer - 1].didBet = 0;
+      players[curPlayer - 1].didBet = 2;
       pot += curBet;
+      tableBet = curBet;
       curBet = 0;
 
       curPlayer += 1;
@@ -105,7 +110,28 @@ class Board extends Component {
         curPlayer = 1;
       }
     }
-    this.setState({ pot, curPlayer, curBet, players });
+    this.setState({ pot, curPlayer, curBet, players, tableBet });
+  };
+
+  handleCall = () => {
+    console.log("Call Clicked", this.state.tableBet);
+    const players = [...this.state.players];
+    let pot = this.state.pot;
+    let curPlayer = this.state.curPlayer;
+    let curBet = this.state.curBet;
+    let tableBet = this.state.tableBet;
+
+    if (tableBet <= players[curPlayer - 1].cash) {
+      players[curPlayer - 1].cash -= tableBet;
+      players[curPlayer - 1].didBet = 2;
+      pot += curBet;
+
+      curPlayer += 1;
+      if (curPlayer > this.state.number_of_players) {
+        curPlayer = 1;
+      }
+    }
+    this.setState({ pot, curPlayer, players, tableBet });
   };
 
   handleBet = () => {

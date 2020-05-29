@@ -18,32 +18,52 @@ class Player extends Component {
     );
   }
 
-  renderButtons = () => {
+  renderButtons() {
+    console.log(this.props.player.didBet);
     if (this.props.player.didBet === 0) {
+      //No bet has been placed
       if (this.props.player.id === this.props.curPlayer) {
-        return (
-          <div>
-            <button
-              onClick={() => this.props.onBet()}
-              className="btn-primary btn-sm m-2"
-            >
-              Bet
-            </button>
-            <button
-              onClick={() => this.props.onCheck(this.props.player.id)}
-              className="btn-primary btn-sm m-2"
-            >
-              Check
-            </button>
-            <button
-              onClick={() => this.props.onFold(this.props.player.id)}
-              className="btn-primary btn-sm m-2"
-            >
-              Fold
-            </button>
-          </div>
-        );
+        if (this.props.tableBet === 0) {
+          //Curent player is given the option to bet
+          return (
+            <div>
+              <button
+                onClick={() => this.props.onBet()}
+                className="btn-primary btn-sm m-2"
+              >
+                Bet
+              </button>
+              <button
+                onClick={() => this.props.onCheck(this.props.player.id)}
+                className="btn-primary btn-sm m-2"
+              >
+                Check
+              </button>
+              <button
+                onClick={() => this.props.onFold(this.props.player.id)}
+                className="btn-primary btn-sm m-2"
+              >
+                Fold
+              </button>
+            </div>
+          );
+        } else {
+          //A bet has been placed, player given option to call, raise, or fold
+          return (
+            <div>
+              <button
+                onClick={() => this.props.onCall()}
+                className="btn-primary btn-sm m-2"
+              >
+                Call
+              </button>
+              <button className="btn-primary btn-sm m-2">Raise</button>
+              <button className="btn-primary btn-sm m-2">Fold</button>
+            </div>
+          );
+        }
       } else {
+        //other players given option to fold
         return (
           <div>
             <button
@@ -55,7 +75,8 @@ class Player extends Component {
           </div>
         );
       }
-    } else {
+    } else if (this.props.player.didBet === 1) {
+      //Player clicked bet and in now given option to enter a bet
       return (
         <div>
           <input
@@ -70,8 +91,14 @@ class Player extends Component {
           </button>
         </div>
       );
+    } else if (this.props.player.didBet === 2) {
+      return (
+        <div>
+          <p>Bet of ${this.props.tableBet} placed.</p>
+        </div>
+      );
     }
-  };
+  }
 
   displayCard = (card) => {
     let cardNumber = "2H";
