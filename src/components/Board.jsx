@@ -12,9 +12,9 @@ class Board extends Component {
     cardList: [],
     flopList: [],
     players: [
-      { id: 1, cash: 20, didBet: 0, bet: 0, hand: [] },
-      { id: 2, cash: 20, didBet: 0, bet: 0, hand: [] },
-      { id: 3, cash: 20, didBet: 0, bet: 0, hand: [] },
+      { id: 1, cash: 20, didBet: 0, didFold: 0, bet: 0, hand: [] },
+      { id: 2, cash: 20, didBet: 0, didFold: 0, bet: 0, hand: [] },
+      { id: 3, cash: 20, didBet: 0, didFold: 0, bet: 0, hand: [] },
     ],
   };
   render() {
@@ -124,7 +124,7 @@ class Board extends Component {
     if (tableBet <= players[curPlayer - 1].cash) {
       players[curPlayer - 1].cash -= tableBet;
       players[curPlayer - 1].didBet = 2;
-      pot += curBet;
+      pot += tableBet;
 
       curPlayer += 1;
       if (curPlayer > this.state.number_of_players) {
@@ -160,9 +160,24 @@ class Board extends Component {
   resetCards = () => {
     const players = this.state.players.map((p) => {
       p.hand = [];
+      p.didBet = 0;
+      p.bet = 0;
+      p.cash = 20;
+      p.didFold = 0;
       return p;
     });
-    this.setState({ cardList: [], flopList: [], players });
+    let curPlayer = 1;
+    let tableBet = 0;
+    let pot = 0;
+
+    this.setState({
+      cardList: [],
+      flopList: [],
+      players,
+      curPlayer,
+      tableBet,
+      pot,
+    });
   };
 
   dealCards = () => {

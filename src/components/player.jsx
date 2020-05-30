@@ -19,10 +19,11 @@ class Player extends Component {
   }
 
   renderButtons() {
-    console.log(this.props.player.didBet);
     if (this.props.player.didBet === 0) {
+      console.log(this.props.player.didBet);
       //No bet has been placed
       if (this.props.player.id === this.props.curPlayer) {
+        console.log("Current player given option to bet");
         if (this.props.tableBet === 0) {
           //Curent player is given the option to bet
           return (
@@ -58,7 +59,12 @@ class Player extends Component {
                 Call
               </button>
               <button className="btn-primary btn-sm m-2">Raise</button>
-              <button className="btn-primary btn-sm m-2">Fold</button>
+              <button
+                onClick={() => this.props.onFold(this.props.player.id)}
+                className="btn-primary btn-sm m-2"
+              >
+                Fold
+              </button>
             </div>
           );
         }
